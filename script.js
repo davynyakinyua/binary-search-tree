@@ -65,4 +65,46 @@ class Bbst {
         }
     }
 
+    // delete node method
+    deleteItem (value){
+        this.root = this.deleteNode(this.root, value);
+    }
+
+    deleteNode (root, value){
+        if(!root) return root;
+
+        if(value < root.value){
+            root.left = this.deleteNode(root.left, value);
+        } else if(value > root.value){
+            root.right = this.deleteNode(root.right, value);
+        } else{
+            // node with only one child or no child
+            if(!root.left){
+                return root.right;
+            } else if(!root.right){
+                return root.left;
+            }
+
+            //node with two children
+            const successor = this.minValueNode(root.right);
+
+            root.value = successor.value;
+
+            // delete the inorder successor
+            root.right = this.deleteNode(root.right, successor.value);
+
+            return root;
+        }
+    }
+
+    minValueNode (node){
+        let current = node;
+
+        while(current && current.left){
+            current = current.left;
+        }
+
+        return current;
+    }
+
 }
