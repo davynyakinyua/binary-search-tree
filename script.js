@@ -1,7 +1,7 @@
 console.log("Balanced BST");
 
 // node class
-class Node {
+export class Node {
     constructor (value){
         this.value = value;
         this.left = null;
@@ -10,7 +10,7 @@ class Node {
 }
 
 // binary search class
-class BalancedBst {
+export class BalancedBst {
     constructor (array){
         this.root = this.buildTree(array);
     }
@@ -120,7 +120,7 @@ class BalancedBst {
         if(value === root.value) return root; // value found
 
         // recursively find the value if its less or great than root
-        if(value < root){
+        if(value < root.value){
             return this.findNode(root.left, value);
         } else {
             return this.findNode(root.right, value);
@@ -234,7 +234,7 @@ class BalancedBst {
         const node = this.find(value);
 
         // if node is empty
-        if(!node) return;
+        if(!node) return -1;
 
         // if node is not empty
         return this.calculateHeight(node);
@@ -260,7 +260,7 @@ class BalancedBst {
         const node = this.find(value);
 
         // return null if not found
-        if(!node) return null;
+        if(!node) return -1;
 
         // if found
         return this.calculateDepth(node);
@@ -275,7 +275,7 @@ class BalancedBst {
 
         // traverse
         while(current){
-            if(node.value === current){
+            if(node.value === current.value){
                 return depth;
             } else if(node.value < current){
                 current = current.left;
