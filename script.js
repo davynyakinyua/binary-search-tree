@@ -1,5 +1,6 @@
 console.log("Balanced BST");
 
+// node class
 class Node {
     constructor (value){
         this.value = value;
@@ -9,17 +10,18 @@ class Node {
     }
 }
 
-class Bbst {
+// binary search class
+class BalancedBst {
     constructor (array){
         this.root = this.buildTree(array);
     }
 
-    // method
+    // method to build tree using content of array
     buildTree (array){
         // remove duplicates and sort the array
         const uniqueSortedArray = Array.from(new Set(array)).sorted((a, b) => a - b);
 
-        // build balanced binary search tree
+        // function to build balanced binary search tree
         const buildBst = (start, end) => {
             if(start > end) return null;
 
@@ -105,6 +107,57 @@ class Bbst {
         }
 
         return current;
+    }
+
+    find (value){
+        return this.findNode(this.root, value);
+    }
+
+    findNode (root, value){
+        // base case
+        if(!root) return null;
+
+        // if value equals to root
+        if(value === root) return root; // value found
+
+        // recursively find the value if its less or great than root
+        if(value < root){
+            return this.findNode(root.left, value);
+        } else {
+            return this.findNode(root.right, value);
+        }
+    }
+
+    // traverse the binary tree
+    levelOrderForEach(callback){
+        // verify callback is a function
+        if(callback !== 'function'){
+            throw new Error('A callback function is required.');
+        }
+
+        // if root is empty
+        if(!this.root) return;
+
+        // declare a queue for node breadth first search
+        const queue = [this.root];
+
+        // traverse throught the queue
+        while(queue.length > 0){
+            // Dequeue the front node
+            const currentNode = queue.shift();
+
+            // call the callback with the current node
+            callback(currentNode);
+
+            // Enqueue the children if they exist
+            if(currentNode.left){
+                queue.push(currentNode.left);
+            }
+
+            if(currentNode.right){
+                queue.push(currentNode.right);
+            }
+        }
     }
 
 }
