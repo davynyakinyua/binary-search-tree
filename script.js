@@ -6,7 +6,6 @@ class Node {
         this.value = value;
         this.left = null;
         this.right = null;
-        this.height = 1;
     }
 }
 
@@ -248,11 +247,84 @@ class BalancedBst {
         if(!node) return -1;
 
         // recursion case
-        const leftHeight = calculateHeight(node.left);
+        const leftHeight = this.calculateHeight(node.left);
         const rightHeight = this.calculateHeight(node.right);
 
         // the height of current node is max of its children plus one
         return Math.max(leftHeight, rightHeight) + 1;
     }
 
+    // depth method
+    depth (value){
+        // find if value exists
+        const node = this.find(value);
+
+        // return null if not found
+        if(!node) return null;
+
+        // if found
+        return this.calculateDepth(node);
+    }
+
+    // depth method function helper
+    calculateDepth (node){
+        // initialize depth countere
+        let depth = 0;
+        // start from the root
+        let current = this.root;
+
+        // traverse
+        while(current){
+            if(node.value === current){
+                return depth;
+            } else if(node.value < current){
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+
+            depth++;
+        }
+
+        // if not found return null
+        return null;
+    }
+    
+    // tree balance check
+    isBalanced (){
+        return this.checkBalance(this.root) !== -1;
+    }
+
+    // is balanced method helper
+    checkBalance (node){
+        // base case
+        if(!node) return 0;
+
+        // recursive case
+        // check height of left subtree
+        const leftHeight = this.checkBalance(node.left);
+        if(leftHeight === -1) return -1;
+
+        // check height of right subtree
+        const rightHeight = this.checkBalance(node.right);
+        if(rightHeight === -1) return -1;
+
+        // check the height difference of both subtrees
+        if(Math.abs(leftHeight - rightHeight) > 1){
+            return -1;
+        }
+
+        // height of the current node
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    // rebalance method
+    rebalance(){
+        // create an array to store nodes
+        const sortedValues = [];
+        // call inorder function to receive each node and push it to sortedValues
+        this.inOrderForEach(node => sortedValues.push(node.value));
+        // rebuild tree with the new values
+        this.root = this.buildTree(sortedValues);
+    }
 }
