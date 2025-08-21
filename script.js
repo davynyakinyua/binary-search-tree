@@ -19,7 +19,7 @@ class BalancedBst {
     // method to build tree using content of array
     buildTree (array){
         // remove duplicates and sort the array
-        const uniqueSortedArray = Array.from(new Set(array)).sorted((a, b) => a - b);
+        const uniqueSortedArray = Array.from(new Set(array)).sort((a, b) => a - b);
 
         // function to build balanced binary search tree
         const buildBst = (start, end) => {
@@ -118,7 +118,7 @@ class BalancedBst {
         if(!root) return null;
 
         // if value equals to root
-        if(value === root) return root; // value found
+        if(value === root.value) return root; // value found
 
         // recursively find the value if its less or great than root
         if(value < root){
@@ -131,7 +131,7 @@ class BalancedBst {
     // traverse the binary tree
     levelOrderForEach(callback){
         // verify callback is a function
-        if(callback !== 'function'){
+        if(typeof callback !== 'function'){
             throw new Error('A callback function is required.');
         }
 
@@ -158,6 +158,101 @@ class BalancedBst {
                 queue.push(currentNode.right);
             }
         }
+    }
+
+    inOrderForEach(callback){
+        // if callback is not a function
+        if(typeof callback !== 'function'){
+            throw new Error('A callback function is required.');
+        }
+
+        // traversal function
+        function traverse (node){
+            // base case
+            if(!node) return;
+
+            // recursion
+            traverse(node.left);
+
+            callback(node);
+
+            traverse(node.right);
+        }
+
+        traverse(this.root);
+
+    }
+
+    preOrderForEach(callback){
+        // if callback is not a function
+        if(typeof callback !== 'function'){
+            throw new Error('A callback function is required');
+        }
+
+        // traversal function
+        function traverse (node){
+            // base case
+            if(!node) return;
+
+            // recursion calls
+            callback(node);
+
+            traverse(node.left);
+
+            traverse(node.right);
+        }
+
+        traverse(this.root);
+
+    }
+
+    postOrderForEach(callback){
+        // if callback is not a function
+        if(typeof callback !== 'function'){
+            throw new Error('A callback function is required.');
+        }
+
+        // traversal function
+        function traverse (node){
+            // base case
+            if(!node) return;
+
+            // recursion calls
+            traverse(node.left);
+
+            traverse(node.right);
+
+            callback(node);
+        }
+
+        traverse(this.root);
+
+    }
+
+    // height method 
+    height (value){
+        // locate the node
+        const node = this.find(value);
+
+        // if node is empty
+        if(!node) return;
+
+        // if node is not empty
+        return this.calculateHeight(node);
+
+    }
+
+    // height helper function
+    calculateHeight (node){
+        // base case
+        if(!node) return -1;
+
+        // recursion case
+        const leftHeight = calculateHeight(node.left);
+        const rightHeight = this.calculateHeight(node.right);
+
+        // the height of current node is max of its children plus one
+        return Math.max(leftHeight, rightHeight) + 1;
     }
 
 }
